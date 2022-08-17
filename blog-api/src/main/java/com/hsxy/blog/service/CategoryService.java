@@ -24,4 +24,11 @@ public interface CategoryService {
 	 * @return com.hsxy.blog.vo.Result
 	 */
 	Result findAll();
+	
+	/**
+	 * @Description 查找全部类别信息详情(导航页)
+	 * @Param []
+	 * @return com.hsxy.blog.vo.Result
+	 */
+	Result findAllDetail();
 }

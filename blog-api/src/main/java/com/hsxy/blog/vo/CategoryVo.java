@@ -28,4 +28,11 @@ public class CategoryVo {
 	 * @return
 	 */
 	private String categoryName;
+	
+	/**
+	 * @Description 分类描述
+	 * @Param
+	 * @return
+	 */
+	private String description;
 }

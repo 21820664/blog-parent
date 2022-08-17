@@ -26,7 +26,7 @@ public class TagsController {
 	 * @Param []
 	 * @return com.hsxy.blog.vo.Result
 	 */
-	@GetMapping("hot")
+	@GetMapping("/hot")
 	public Result hot(){
 		int limit = 6;//最热的六个标签
 		return tagService.hots(limit);
@@ -42,12 +42,17 @@ public class TagsController {
 		return tagService.findAll();
 	}
 	
-/*	@GetMapping("detail")
+	/**
+	 * @Description 查看全部标签详情
+	 * @Param []
+	 * @return com.hsxy.blog.vo.Result
+	 */
+	@GetMapping("/detail")
 	public Result findAllDetail(){
 		return tagService.findAllDetail();
 	}
 	
-	@GetMapping("detail/{id}")
+	/*@GetMapping("detail/{id}")
 	public Result findDetailById(@PathVariable("id") Long id){
 		return tagService.findDetailById(id);
 	}*/

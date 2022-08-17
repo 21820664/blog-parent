@@ -36,6 +36,15 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Override
 	public Result findAll() {
+		LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();//因为空参,所以new一个空LambdaQueryWrapper
+		queryWrapper.select(Category::getId,Category::getCategoryName);
+		List<Category> categories = categoryMapper.selectList(queryWrapper);
+		//页面交互的对象
+		return Result.success(copyList(categories));
+	}
+	
+	@Override
+	public Result findAllDetail() {
 		List<Category> categories = categoryMapper.selectList(new LambdaQueryWrapper<>());//因为空参,所以new一个空QueryWrapper
 		//页面交互的对象
 		return Result.success(copyList(categories));
