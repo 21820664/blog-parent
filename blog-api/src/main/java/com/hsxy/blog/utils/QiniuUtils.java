@@ -22,7 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 public class QiniuUtils {
 	//七牛云测试域名(30天)
-	public static final String URL = "rgqys1n0s.hn-bkt.clouddn.com";
+	//!需加入http://前缀,否则在编写Markdown时图裂(前端问题)
+	public static final String URL = "http://rgqys1n0s.hn-bkt.clouddn.com";
 	
 	//修改以下两个值放到proprietarties中，在密钥管理中获取
 	@Value("${qiniu.accessKey}")

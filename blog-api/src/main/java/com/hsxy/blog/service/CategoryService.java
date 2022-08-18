@@ -31,4 +31,11 @@ public interface CategoryService {
 	 * @return com.hsxy.blog.vo.Result
 	 */
 	Result findAllDetail();
+	
+	/**
+	 * @Description 通过类别ID查找类别信息详情(分类内页)
+	 * @Param []
+	 * @return com.hsxy.blog.vo.Result
+	 */
+	Result findAllDetailById(Long id);
 }

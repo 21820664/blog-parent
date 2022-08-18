@@ -52,9 +52,14 @@ public class TagsController {
 		return tagService.findAllDetail();
 	}
 	
-	/*@GetMapping("detail/{id}")
+	/**
+	 * @Description 查询文章标签下所有的文章
+	 * @Param [id]
+	 * @return com.hsxy.blog.vo.Result
+	 */
+	@GetMapping("detail/{id}")
 	public Result findDetailById(@PathVariable("id") Long id){
 		return tagService.findDetailById(id);
-	}*/
+	}
 	
 }

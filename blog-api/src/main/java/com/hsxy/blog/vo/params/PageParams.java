@@ -15,11 +15,20 @@ public class PageParams {
 	
 	private int pageSize = 10;
 	
-/*	private Long categoryId;
-	
+	/**
+	 * @Description 通过类别ID分页
+	 * @Param
+	 * @return
+	 */
+	private Long categoryId;
+	/**
+	 * @Description 通过标签ID分页
+	 * @Param
+	 * @return
+	 */
 	private Long tagId;
 	
-	private String year;
+/*	private String year;
 	
 	private String month;
 	

@@ -53,7 +53,8 @@ public class ArticleServiceImpl implements ArticleService {
         Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
 		//查询条件
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        /*if (pageParams.getCategoryId() != null){
+		//查询文章的参数 加上分类id，判断不为空 加上分类条件
+        if (pageParams.getCategoryId() != null){
             // and category_id=#{categoryId}
             queryWrapper.eq(Article::getCategoryId,pageParams.getCategoryId());
         }
@@ -62,17 +63,20 @@ public class ArticleServiceImpl implements ArticleService {
             //加入标签 条件查询
             //article表中 并没有tag字段 一篇文章 有多个标签
             //article_tag  article_id 1 : n tag_id
+	
+			//我们需要利用一个全新的属于文章标签的queryWrapper将这篇文章的article_Tag查出来，保存到一个list当中。
+			// 然后再根据queryWrapper的in方法选择我们需要的标签即可。
             LambdaQueryWrapper<ArticleTag> articleTagLambdaQueryWrapper = new LambdaQueryWrapper<>();
             articleTagLambdaQueryWrapper.eq(ArticleTag::getTagId,pageParams.getTagId());
             List<ArticleTag> articleTags = articleTagMapper.selectList(articleTagLambdaQueryWrapper);
             for (ArticleTag articleTag : articleTags) {
                 articleIdList.add(articleTag.getArticleId());
             }
-            if (articleIdList.size() > 0){
+            if (!articleIdList.isEmpty()){
                 // and id in(1,2,3)
                 queryWrapper.in(Article::getId,articleIdList);
             }
-        }*/
+        }
         //是否置顶进行排序
         //order by create_date desc
         queryWrapper.orderByDesc(Article::getWeight,Article::getCreateDate);
