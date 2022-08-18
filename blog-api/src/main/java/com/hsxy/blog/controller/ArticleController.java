@@ -1,11 +1,13 @@
 package com.hsxy.blog.controller;
 
 import com.hsxy.blog.common.aop.LogAnnotation;
+import com.hsxy.blog.common.cache.Cache;
 import com.hsxy.blog.service.ArticleService;
 import com.hsxy.blog.vo.Result;
 import com.hsxy.blog.vo.params.ArticleParam;
 import com.hsxy.blog.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -28,6 +30,8 @@ public class ArticleController {
 	 */
 	@PostMapping
 	@LogAnnotation(module = "文章",operation = "获取文章列表")//加上此注解，代表要对此接口记录日志
+	//@Cacheable(cacheNames = "listArticleCache")	//TODO SpringCache报错序列化异常
+	@Cache(expire = 5 * 60 * 1000, name = "list_article")
 	public Result listArticle(@RequestBody PageParams pageParams) {//Result是统一结果返回
 		//ArticleVo 页面接收的数据
 		//List<ArticleVo> articles = articleService.listArticlesPage(pageParams);
@@ -44,6 +48,7 @@ public class ArticleController {
 	 * @return com.hsxy.blog.vo.Result
 	 */
 	@PostMapping("/hot")
+	@Cache(expire = 5 * 60 * 1000, name = "hot_article")
 	public Result hotArticle(){//无参删除
 		int limit = 5;
 		return articleService.hotArticle(limit);
@@ -55,6 +60,7 @@ public class ArticleController {
 	 * @return com.hsxy.blog.vo.Result
 	 */
 	@PostMapping("/new")
+	@Cache(expire = 5 * 60 * 1000, name = "new_article")
 	public Result newArticles(){
 		int limit = 5;
 		return articleService.newArticles(limit);

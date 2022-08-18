@@ -2,6 +2,7 @@ package com.hsxy.blog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 /**
  * @name BlogApp
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+@EnableCaching	//开启基于注解的缓存
 public class BlogApp {
 	public static void main(String[] args) {
 		SpringApplication.run(BlogApp.class,args);

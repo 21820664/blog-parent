@@ -28,10 +28,11 @@
         group by year,month
     </select>
 
+
+    <!--# "1 = 1" 前置支持(Mybatis-plus对and不太行)-->
     <select id="listArticle" resultMap="articleMap">
         select * from ms_article
         <where>
-            # 前置支持(Mybatis-plus对and不太行)
             1 = 1
             <if test="categoryId != null">
                 and category_id=#{categoryId}
@@ -43,9 +44,10 @@
                 and (FROM_UNIXTIME(create_date/1000,'%Y') =#{year} and FROM_UNIXTIME(create_date/1000,'%m')=#{month})
             </if>
         </where>
-        # !降序排列必须每个指定desc,升序才可以只写最后一个或不写
-        # 如果想按点击量排序可更改为comment_counts
+
         order by weight desc,create_date desc
     </select>
-
+    <!-- "order by weight desc,create_date desc"
+        # !降序排列必须每个指定desc,升序才可以只写最后一个或不写
+        # 如果想按点击量排序可更改为comment_counts-->
 </mapper>
