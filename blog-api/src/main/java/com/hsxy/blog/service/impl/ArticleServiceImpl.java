@@ -1,6 +1,7 @@
 package com.hsxy.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hsxy.blog.dao.dos.Archives;
 import com.hsxy.blog.dao.mapper.ArticleBodyMapper;
@@ -46,10 +47,26 @@ public class ArticleServiceImpl implements ArticleService {
 	private SysUserService sysUserService;
 	
 	@Override
+	public Result listArticle(PageParams pageParams) {
+		/**
+		 * 1. 分页查询 article数据库表
+		 */
+		Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
+		
+		IPage<Article> articleIPage = this.articleMapper.listArticle(
+				page,
+				pageParams.getCategoryId(),
+				pageParams.getTagId(),
+				pageParams.getYear(),
+				pageParams.getMonth());
+		return Result.success(copyList(articleIPage.getRecords(),true,true));
+	}
+	
+	/*@Override
     public Result listArticle(PageParams pageParams) {
-        /**
+        *//**
          * 1. 分页查询 article数据库表
-         */
+         *//*
         Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
 		//查询条件
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
@@ -85,7 +102,7 @@ public class ArticleServiceImpl implements ArticleService {
         //能直接返回吗？ 很明显不能
         List<ArticleVo> articleVoList = copyList(records,true,true);
         return Result.success(articleVoList);
-    }
+    }*/
 	
 	@Override
 	public Result hotArticle(int limit) {
