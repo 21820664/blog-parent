@@ -132,7 +132,7 @@
             <version>[7.7.0, 7.7.99]</version>
         </dependency>
 
-        <!-- Spring Cache -->
+        <!-- Spring Cache (还未使用) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>

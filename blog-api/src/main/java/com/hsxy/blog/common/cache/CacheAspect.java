@@ -20,6 +20,7 @@ import java.time.Duration;
 /**
  * @name CacheAspect
  * @Description 缓存切面
+ * 有BUG,废案(id在JSON中会出现精度损失,但返回为Object,无法使用序列化注解{要大改Long id为String id})
  * @author WU
  * @Date 2022/8/18 15:52
  */
@@ -76,6 +77,7 @@ public class CacheAspect {
 			String redisValue = redisTemplate.opsForValue().get(redisKey);
 			if (StringUtils.isNotEmpty(redisValue)){
 				log.info("走了缓存~~~,{},{}",className,methodName);
+				//id在JSON中会出现精度损失,但返回为Object,无法使用序列化注解
 				return JSON.parseObject(redisValue, Result.class);
 			}
 			Object proceed = pjp.proceed();
