@@ -21,6 +21,7 @@ import java.time.Duration;
  * @name CacheAspect
  * @Description 缓存切面
  * 有BUG,废案(id在JSON中会出现精度损失,但返回为Object,无法使用序列化注解{要大改Long id为String id})
+ * 已修复:添加JacksonConfig序列化统一解决Long精度丢失问题
  * @author WU
  * @Date 2022/8/18 15:52
  */

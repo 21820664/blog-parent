@@ -13,10 +13,10 @@ public interface CategoryService {
 
 	/**
 	 * @Description 根据类别id查询类别信息
-	 * @Param [id]
+	 * @Param [categoryId]
 	 * @return com.hsxy.blog.vo.CategoryVo
 	 */
-	CategoryVo findCategoryById(Long id);
+	CategoryVo findCategoryById(Long categoryId);
 	
 	/**
 	 * @Description 查找全部类别信息

@@ -50,11 +50,12 @@ public class SysUserServiceImpl implements SysUserService {
 	@Override
 	public UserVo findUserVoById(Long userId) {
 		SysUser sysUser = sysUserMapper.selectById(userId);
+		//未登录
 		if (sysUser == null){
 			sysUser = new SysUser();
 			sysUser.setId(1L);
 			sysUser.setAvatar("/static/img/logo.b3a48c0.png");
-			sysUser.setNickname("码神之路");
+			sysUser.setNickname("红域");
 		}
 		UserVo userVo = new UserVo();
 		/*userVo.setAvatar(sysUser.getAvatar());

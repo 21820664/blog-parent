@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @name AllExceptionHandler
- * @Description
+ * @Description 对加了@Controller注解的方法进行拦截处理 Aop的实现
  * @author WU
  * @Date 2022/8/10 14:55
  */
-//对加了@Controller注解的方法进行拦截处理 Aop的实现
 @ControllerAdvice
 public class AllExceptionHandler {
 	

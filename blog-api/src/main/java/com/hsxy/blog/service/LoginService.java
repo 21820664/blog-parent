@@ -13,6 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface LoginService {
+	/**
+	 * @Description 登录功能
+	 * @Param [loginParam]
+	 * @return com.hsxy.blog.vo.Result
+	 */
 	Result login(LoginParam loginParam);
 	
 	/**

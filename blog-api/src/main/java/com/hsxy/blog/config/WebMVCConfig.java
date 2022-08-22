@@ -28,7 +28,17 @@ public class WebMVCConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		//跨域配置，不可设置为*，不安全, 前后端分离项目，可能域名不一致
 		//本地测试 端口不一致 也算跨域
-		registry.addMapping("/**").allowedOrigins("http://localhost:8080");
+		
+		//如果配置了自定义拦截器,这种跨域配置会失效，所以采用第二种(403:Invalid CORS request)
+		//因为使用了nginx代理，导致码神的那种方式会失效（个人觉得是配置发生了变化），所以全部放开就好啦。
+		//registry.addMapping("/**").allowedOrigins("43.142.80.183","http://localhost:8080");
+		
+		registry.addMapping("/**")
+				.allowedOriginPatterns("*")
+				.allowedMethods("GET","HEAD","POST","PUT","DELETE","OPTIONS")
+				.allowCredentials(true)
+				.maxAge(3600)
+				.allowedHeaders("*");
 	}
 	
 	/**
@@ -43,6 +53,6 @@ public class WebMVCConfig implements WebMvcConfigurer {
 				.addPathPatterns("/test")
 				.addPathPatterns("/comments/create/change")//评论需要登录
 				.addPathPatterns("/articles/publish");//发布文章要拿到SysUser需要加入拦截器
-				//.excludePathPatterns("/login");
+				//.excludePathPatterns("/login")
 	}
 }

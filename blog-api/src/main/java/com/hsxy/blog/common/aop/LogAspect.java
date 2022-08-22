@@ -67,9 +67,11 @@ public class LogAspect {
 		String methodName = signature.getName();
 		log.info("request method:{}",className + "." + methodName + "()");
 
-		//请求的参数(报错,待解决<改动后不显示>)
+		//请求的参数(报错,已解决<改动后不显示>)
 		Object[] args = joinPoint.getArgs();
-		if (Objects.nonNull(args)){
+		String params = JSON.toJSONString(args[0]);
+		log.info("params:{}",params);
+		/*if (Objects.nonNull(args)){//不用加
 			List<Object> argsList = Arrays.asList(args);
 			// 将 HttpServletResponse 和 HttpServletRequest 参数移除，不然会报异常
 			List<Object> collect = argsList.stream().filter(o -> !(o instanceof HttpServletResponse || o instanceof HttpServletRequest)).collect(Collectors.toList());
@@ -79,8 +81,7 @@ public class LogAspect {
 			String params = JSON.toJSONString(args[0]);
 			log.info("params:{}",params);
 		} catch (Exception e) {
-		
-		}
+		}*/
 		
 		//获取request 设置IP地址
 		HttpServletRequest request = HttpContextUtils.getHttpServletRequest();

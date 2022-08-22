@@ -21,8 +21,8 @@ import java.util.List;
  */
 //@EnableWebMvc
 //@Configuration
-public class WebJsonConverterConfig implements WebMvcConfigurer {
-	/*@Override
+/*public class WebJsonConverterConfig implements WebMvcConfigurer {
+	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -36,5 +36,5 @@ public class WebJsonConverterConfig implements WebMvcConfigurer {
 		objectMapper.registerModule(simpleModule);
 		jackson2HttpMessageConverter.setObjectMapper(objectMapper);
 		converters.add(jackson2HttpMessageConverter);
-	}*/
-}
+	}
+}*/

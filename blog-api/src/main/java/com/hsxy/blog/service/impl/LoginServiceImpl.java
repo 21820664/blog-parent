@@ -13,6 +13,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -25,7 +26,8 @@ import java.util.concurrent.TimeUnit;
  * @Date 2022/8/11 10:35
  */
 @Service
-public class LoginServceImpl implements LoginService {
+@Transactional	//DO 新增:为什么要加事务，因为我们在添加用户的时候，如果他的数据有问题，还有就是其他一些的问题的时候，数据库里面是不能这样添加用户的，但是不加事务的话，可能会自动加上。--->所以要添加事务
+public class LoginServiceImpl implements LoginService {
 	//加密盐用于加密
 	private static final String SALT = "mszlu!@#";
 	
@@ -110,7 +112,7 @@ public class LoginServceImpl implements LoginService {
 		){
 			return Result.fail(ErrorCode.PARAMS_ERROR.getCode(),ErrorCode.PARAMS_ERROR.getMsg());
 		}
-		SysUser sysUser = this.sysUserService.findUserByAccount(account);
+		SysUser sysUser = sysUserService.findUserByAccount(account);
 		if (sysUser != null){
 			return Result.fail(ErrorCode.ACCOUNT_EXIST.getCode(),ErrorCode.ACCOUNT_EXIST.getMsg());
 		}

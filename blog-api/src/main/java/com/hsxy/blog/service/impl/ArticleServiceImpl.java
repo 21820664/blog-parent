@@ -16,6 +16,7 @@ import com.hsxy.blog.utils.UserThreadLocal;
 import com.hsxy.blog.vo.*;
 import com.hsxy.blog.vo.params.ArticleParam;
 import com.hsxy.blog.vo.params.PageParams;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,7 @@ public class ArticleServiceImpl implements ArticleService {
 	public Result hotArticle(int limit) {
 		//查询条件
 		LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-		//与sql 执行顺序有出入:7select->9order by->10limit
+		//与sql 执行顺序有出入:7select->9order by->10limit(恢复顺序)
 		queryWrapper.select(Article::getId,Article::getTitle);
 		queryWrapper.orderByDesc(Article::getViewCounts);
 		queryWrapper.last("limit "+limit);
@@ -184,6 +185,7 @@ public class ArticleServiceImpl implements ArticleService {
 	//"eop的作用是对应copyList，集合之间的copy分解成集合元素之间的copy
 	private ArticleVo copy(Article article,boolean isTag,boolean isAuthor,boolean isBody,boolean isCategory){
 		ArticleVo articleVo = new ArticleVo();
+		articleVo.setId(Long.valueOf(article.getId()));//TODO 新增
 		//BeanUtils.copyProperties用法   https://blog.csdn.net/Mr_linjw/article/details/50236279
 		BeanUtils.copyProperties(article, articleVo);
 		articleVo.setCreateDate(new DateTime(article.getCreateDate()).toString("yyyy-MM-dd HH:mm"));
@@ -196,6 +198,12 @@ public class ArticleServiceImpl implements ArticleService {
 			//拿到作者id
 			Long authorId = article.getAuthorId();
 			articleVo.setAuthor(sysUserService.findUserVoById(authorId).getNickname());
+			/*SysUser sysUser = sysUserService.findUserById(authorId);//TODO 新增
+			UserVo userVo = new UserVo();
+			userVo.setAvatar(sysUser.getAvatar());
+			userVo.setId(sysUser.getId().toString());
+			userVo.setNickname(sysUser.getNickname());
+			articleVo.setAuthor(userVo);*/
 		}
 		if (isBody){
 			Long bodyId = article.getBodyId();
@@ -212,9 +220,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Resource
 	private CategoryService categoryService;
 	
-	private CategoryVo findCategory(Long categoryId) {
+	/*private CategoryVo findCategory(Long categoryId) {
 		return categoryService.findCategoryById(categoryId);
-	}
+	}*/
 	
 	
 	@Resource
@@ -230,6 +238,9 @@ public class ArticleServiceImpl implements ArticleService {
 	@Resource
 	private ArticleTagMapper articleTagMapper;
 	
+	//@Autowired
+    //private RocketMQTemplate rocketMQTemplate;
+	
 	@Override
 	@Transactional
 	public Result publish(ArticleParam articleParam) {
@@ -243,7 +254,33 @@ public class ArticleServiceImpl implements ArticleService {
 		 * 4. body 内容存储 article bodyId
 		 */
 		Article article = new Article();
-		article.setAuthorId(sysUser.getId());
+		boolean isEdit = false;
+		if (articleParam.getId() != null){//article之前已获取过id则认为是编辑模式
+			article.setId(articleParam.getId());
+			article.setTitle(articleParam.getTitle());
+			article.setSummary(articleParam.getSummary());
+			article.setCategoryId(articleParam.getCategory().getId());//Long.parseLong(articleParam.getCategory().getId())[非]
+			articleMapper.updateById(article);
+			isEdit = true;
+		}else {
+			//article = new Article();
+			article.setAuthorId(sysUser.getId());
+			article.setWeight(Article.Article_Common);
+			article.setViewCounts(0);
+			article.setTitle(articleParam.getTitle());
+			article.setSummary(articleParam.getSummary());
+			article.setCommentCounts(0);
+			article.setCreateDate(System.currentTimeMillis());
+			article.setCategoryId(articleParam.getCategory().getId());//Long.parseLong(articleParam.getCategory().getId())[非]
+			//插入之后 会生成一个文章id（因为新建的文章没有文章id所以要insert一下
+			//官网解释："insert后主键会自动'set到实体的ID字段。所以你只需要"getid()就好
+			//利用主键自增，mp的insert操作后id值会回到参数对象中
+			//https://blog.csdn.net/HSJ0170/article/details/107982866
+			this.articleMapper.insert(article);
+		}
+		
+		//增加文章编辑模式
+		/*article.setAuthorId(sysUser.getId());
 		article.setCategoryId(articleParam.getCategory().getId());
 		article.setCreateDate(System.currentTimeMillis());
 		article.setCommentCounts(0);
@@ -252,11 +289,7 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setViewCounts(0);
 		article.setWeight(Article.Article_Common);
 		article.setBodyId(-1L);
-		//插入之后 会生成一个文章id（因为新建的文章没有文章id所以要insert一下
-		//官网解释："insert后主键会自动'set到实体的ID字段。所以你只需要"getid()就好
-		//利用主键自增，mp的insert操作后id值会回到参数对象中
-		//https://blog.csdn.net/HSJ0170/article/details/107982866
-		this.articleMapper.insert(article);
+		this.articleMapper.insert(article);*/
 		
 		//tags
 		List<TagVo> tags = articleParam.getTags();
@@ -283,6 +316,13 @@ public class ArticleServiceImpl implements ArticleService {
 		
 		ArticleVo articleVo = new ArticleVo();
 		articleVo.setId(article.getId());
+		//编辑模式
+		/*if (isEdit){
+			//发送一条消息给rocketmq 当前文章更新了，更新一下缓存吧
+			ArticleMessage articleMessage = new ArticleMessage();
+			articleMessage.setArticleId(article.getId());
+            rocketMQTemplate.convertAndSend("blog-update-article",articleMessage);
+		}*/
 		return Result.success(articleVo);//只设置了ID值,只返回ID
 		
 		/*//第二种返回方法
